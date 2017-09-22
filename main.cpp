@@ -144,17 +144,37 @@ int main(int argc, char const *argv[]) {
 	listaCopia = adjList;
 	for (int i = 0; i < adjList.size() - 2; i++) {
 		int selectedEdge = (rand() % numArestas) + 1;
-		// for que percorre e seleciona a aresta aleatória
-		// percorra pela lista de adjacencia e conte sempre que chegar numa nova aresta
-		// resultados finais usados em merge
-		merge(listaCopia, originVertex, destinyVertex, numArestas);
+		int origVer = 0;
 
+		// for que percorre e seleciona a aresta aleatória
+		std::list<Edge>::iterator it;
+		for (int i = 0; i < selectedEdge; /* empty */) {
+			for (it = listaCopia[origVer].begin(); it != listaCopia[origVer].end(); it++) {
+				if (it->destinyVertex > origVer) i++;
+				if (i == selectedEdge) break;
+			}
+			origVer++;
+		}
+
+		// resultados finais usados em merge
+		merge(listaCopia, origVer, it->destinyVertex, numArestas);
 	}
 
 	// percorre até encontrar a última aresta
 	// corte mínimo será EdgeIds
 	// tamanho do corte mínimo será EdgeIds.size()
+	std::list<Edge>::iterator resEdge;
+	std::vector<int> res;
+	for (int i = 0; i < listaCopia.size(); i++)
+		if (!listaCopia[i].empty()) {
+			res = listaCopia[i].begin()->EdgeIds;
+			break;
+		}
 
+	std::cout << "Tamanho do corte mínimo: " << res.size() << "\n";
+	std::cout << "O corte mínimo é formado pelas arestas: ";
+	for (int i = 0; i < res.size(); ++i) std::cout << res[i] << " ";
+	std::cout << "\n";
 	
 	return 0;
 }
